@@ -21,6 +21,8 @@ ponto_da_linha('Terminal de Integração Varadouro',            '203').
 ponto_da_linha('Av. Sanhauá - Marco Zero (Centro)',           '203').
 
 % LINHA 207 — Penha Via Seixas ↔ Mangabeira ↔ Rangel ↔ Terminal Varadouro
+% CORREÇÃO: adicionado o Terminal Quadramares, que é o destino final da linha 207
+ponto_da_linha('Terminal Quadramares - LIQ (Mangabeira VII)', '207'). 
 ponto_da_linha('Av. Nossa Senhora da Penha (Penha)',          '207').
 ponto_da_linha('Praia de Seixas (Seixas)',                    '207').
 ponto_da_linha('Av. Hilton Souto Maior (Mangabeira VII)',     '207').
@@ -101,6 +103,22 @@ linha_vai_ao_ci('207').
 linha_vai_ao_ci('304').
 linha_vai_ao_ci('508').
 linha_vai_ao_ci('520').
+
+
+% -------------------------------------------------------------
+%  nome_linha(+NumeroDaLinha, -NomeDescritivo)
+%  Nome legível de cada linha para exibição ao usuário
+% -------------------------------------------------------------
+nome_linha('203', 'Mangabeira VII / José Américo / Rangel ↔ Terminal Varadouro').
+nome_linha('207', 'Penha Via Seixas / Mangabeira ↔ Terminal Varadouro').
+nome_linha('304', 'Mangabeira Shopping / Bancários / Castelo Branco ↔ Pedro II').
+nome_linha('508', 'Penha Via Jacarapé / Cabo Branco / Tambaú ↔ Mangabeira').
+nome_linha('520', 'Altiplano / Tambaú / Bancários ↔ Terminal Varadouro').
+nome_linha('301', 'Mangabeira IV / Castelo Branco ↔ Terminal Varadouro').
+nome_linha('302', 'Cidade Verde / Castelo Branco ↔ Terminal Varadouro').
+nome_linha('510', 'Val Paraíso / Tambaú ↔ Terminal Varadouro').
+nome_linha('517', 'Mangabeira Shopping / Bancários ↔ Manaíra').
+nome_linha('521', 'Bessa / Manaíra Shopping ↔ Bancários').
 
 
 % -------------------------------------------------------------
