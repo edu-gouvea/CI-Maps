@@ -134,6 +134,9 @@ Este projeto demonstra na prática os seguintes conceitos da disciplina:
 ---
 
 ## 👥 Autores
+- Eduardo Ribeiro
+- Luis Felipe Fahning
+- Guilherme de Sousa
 
 Desenvolvido como projeto da disciplina **Lógica Aplicada à Computação** do curso de Ciência da Computação — Centro de Informática, UFPB.
 
