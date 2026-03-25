@@ -1,6 +1,6 @@
 % =============================================================
 %  regras.pl — Regras de inferência do GPS CI/UFPB
-%  Versão 2.0 — Atualizada para o modelo de dados v2
+%  Versão 2.1 — Inclui regras de enriquecimento de linha/parada
 %
 %  Compatível com dados.pl v2:
 %    parada(Id, Rua, Referencia, Bairro, Sentido)
@@ -8,6 +8,11 @@
 %    passa_por(Linha, IdParada)
 %    linha_vai_ao_ci(CodigoLinha)
 %    ponto_de_baldeacao(IdParada, LinhaQueChega, LinhaQueSai)
+%    horario_primeira_viagem(CodigoLinha, Sentido, Hora)
+%    horario_ultima_viagem(CodigoLinha, Sentido, Hora)
+%    opera_nos_dias(CodigoLinha, Dias)
+%    tipo_linha(CodigoLinha, Tipo)
+%    acessibilidade_parada(IdParada, TipoRecurso)
 % =============================================================
 
 :- consult(dados).
@@ -16,8 +21,6 @@
 % -------------------------------------------------------------
 %  VERIFICAÇÃO DE INTEGRIDADE — executada automaticamente
 %  ao carregar o arquivo.
-%  Garante que toda linha marcada como linha_vai_ao_ci/1
-%  possui ao menos uma parada cadastrada em passa_por/2.
 % -------------------------------------------------------------
 :- format("~n[integridade] Verificando base de conhecimento...~n"),
    forall(
@@ -35,8 +38,6 @@
 
 % -------------------------------------------------------------
 %  nome_linha(+CodigoLinha, -NomeDescritivo)
-%  Recupera o nome descritivo de uma linha a partir de linha/2.
-%  Mantém a mesma interface usada pela interface.pl.
 % -------------------------------------------------------------
 nome_linha(Codigo, Nome) :-
     linha(Codigo, Nome).
@@ -44,7 +45,6 @@ nome_linha(Codigo, Nome) :-
 
 % -------------------------------------------------------------
 %  parada_info(+IdParada, -Descricao)
-%  Gera uma descrição legível de uma parada a partir do seu Id.
 %  Formato: "Referencia (Bairro)"
 % -------------------------------------------------------------
 parada_info(Id, Descricao) :-
@@ -53,9 +53,30 @@ parada_info(Id, Descricao) :-
 
 
 % -------------------------------------------------------------
+%  recursos_parada(+IdParada, -ListaRecursos)
+%  Retorna lista de recursos de acessibilidade da parada.
+%  Lista vazia se nenhum recurso cadastrado.
+% -------------------------------------------------------------
+recursos_parada(Id, Recursos) :-
+    findall(R, acessibilidade_parada(Id, R), Recursos).
+
+
+% -------------------------------------------------------------
+%  info_linha(+CodigoLinha, -Tipo, -Dias, -PrimeiraIda, -UltimaIda)
+%  Agrega tipo, dias de operação e horários (sentido bairro_centro).
+%  Usa 'N/D' quando o fato não está cadastrado.
+% -------------------------------------------------------------
+info_linha(Codigo, Tipo, Dias, Primeira, Ultima) :-
+    ( tipo_linha(Codigo, Tipo)             -> true ; Tipo     = 'N/D' ),
+    ( opera_nos_dias(Codigo, Dias)         -> true ; Dias     = 'N/D' ),
+    ( horario_primeira_viagem(Codigo, bairro_centro, Primeira)
+                                           -> true ; Primeira = 'N/D' ),
+    ( horario_ultima_viagem(Codigo, bairro_centro, Ultima)
+                                           -> true ; Ultima   = 'N/D' ).
+
+
+% -------------------------------------------------------------
 %  rota_direta(+IdParadaOrigem, -Linha)
-%  Verdadeiro se existe uma linha direta de IdParadaOrigem
-%  até o CI (linha marcada como linha_vai_ao_ci).
 % -------------------------------------------------------------
 rota_direta(IdOrigem, Linha) :-
     passa_por(Linha, IdOrigem),
@@ -64,8 +85,6 @@ rota_direta(IdOrigem, Linha) :-
 
 % -------------------------------------------------------------
 %  rota_com_baldeacao(+IdParadaOrigem, -Linha1, -IdBaldeacao, -Linha2)
-%  Verdadeiro se existe:
-%    IdOrigem --Linha1--> IdBaldeacao --Linha2--> CI
 % -------------------------------------------------------------
 rota_com_baldeacao(IdOrigem, Linha1, IdBaldeacao, Linha2) :-
     passa_por(Linha1, IdOrigem),
@@ -77,8 +96,6 @@ rota_com_baldeacao(IdOrigem, Linha1, IdBaldeacao, Linha2) :-
 
 % -------------------------------------------------------------
 %  existe_rota(+IdParadaOrigem)
-%  Verdadeiro se há qualquer rota (direta ou com baldeação)
-%  partindo de IdParadaOrigem até o CI.
 % -------------------------------------------------------------
 existe_rota(IdOrigem) :-
     rota_direta(IdOrigem, _), !.
@@ -88,7 +105,6 @@ existe_rota(IdOrigem) :-
 
 % -------------------------------------------------------------
 %  buscar_paradas_por_bairro(+Bairro, -ListaDeIds)
-%  Retorna todos os Ids de paradas do bairro informado.
 % -------------------------------------------------------------
 buscar_paradas_por_bairro(Bairro, Ids) :-
     findall(Id, parada(Id, _, _, Bairro, _), Todos),
@@ -97,12 +113,6 @@ buscar_paradas_por_bairro(Bairro, Ids) :-
 
 % -------------------------------------------------------------
 %  buscar_paradas_por_fragmento(+Fragmento, -ListaDeIds)
-%  Retorna todos os Ids de paradas cuja Referencia, Rua ou
-%  Bairro contenha o Fragmento (busca parcial, sem nome exato).
-%
-%  Exemplo:
-%    ?- buscar_paradas_por_fragmento('UFPB', Ids).
-%    ?- buscar_paradas_por_fragmento('Mangabeira', Ids).
 % -------------------------------------------------------------
 buscar_paradas_por_fragmento(Fragmento, Ids) :-
     findall(

@@ -1,6 +1,6 @@
 % =============================================================
 %  interface.pl — Interface amigável do GPS CI/UFPB
-%  Versão 2.0 — Atualizada para o modelo de dados v2
+%  Versão 2.1 — Exibe horários, dias, tipo e acessibilidade
 % =============================================================
 
 :- consult(regras).
@@ -8,19 +8,24 @@
 
 % -------------------------------------------------------------
 %  consultar(+IdParada)
-%  Predicado principal — busca rota pelo ID da parada.
+%  Ponto de entrada principal. Exibe rotas e, para cada linha
+%  encontrada, mostra tipo, dias de operação, horários e
+%  acessibilidade da parada de origem.
 %
 %  Exemplos:
-%    ?- consultar(p019).   % Av. Epitacio Pessoa (Tambau)
-%    ?- consultar(p013).   % HU / Girador UFPB
-%    ?- consultar(p023).   % Terminal Bessa
+%    ?- consultar(p019).
+%    ?- consultar(p023).
+%    ?- consultar(p013).
 % -------------------------------------------------------------
 consultar(IdOrigem) :-
-    parada_info(IdOrigem, Descricao),
+    parada(IdOrigem, _, _, _, _), !,
+    parada_info(IdOrigem, DescOrigem),
+    recursos_parada(IdOrigem, Recursos),
     format("~n==============================================~n"),
     format(" GPS CI/UFPB~n"),
-    format(" Origem : ~w~n", [Descricao]),
+    format(" Origem : ~w~n", [DescOrigem]),
     format(" Destino: CI/UFPB (Campus I — Bancarios)~n"),
+    exibir_acessibilidade_parada(Recursos),
     format("==============================================~n"),
     (
         buscar_e_exibir(IdOrigem)
@@ -30,15 +35,22 @@ consultar(IdOrigem) :-
     ), !.
 
 consultar(IdOrigem) :-
-    \+ parada(IdOrigem, _, _, _, _),
     format("~n  [!] Parada '~w' nao encontrada na base de dados.~n", [IdOrigem]),
     format("      Use listar_paradas ou buscar('fragmento').~n~n").
 
 
 % -------------------------------------------------------------
+%  exibir_acessibilidade_parada(+Recursos)
+%  Exibe linha de acessibilidade apenas se houver recursos.
+% -------------------------------------------------------------
+exibir_acessibilidade_parada([]) :- !.
+exibir_acessibilidade_parada(Recursos) :-
+    format(" Acessib.: ~w~n", [Recursos]).
+
+
+% -------------------------------------------------------------
 %  buscar(+Fragmento)
-%  Busca paradas cujo nome, referência ou bairro contenha
-%  o Fragmento digitado. Substitui o antigo consultar_aproximado.
+%  Busca paradas por fragmento de nome, rua ou bairro.
 %
 %  Exemplos:
 %    ?- buscar('UFPB').
@@ -62,13 +74,13 @@ buscar(Fragmento) :-
                 format("    [~w] ~w~n", [Id, Desc])
             )
         ),
-        format("~n  Use: consultar(Id).  Ex: consultar(~w).~n~n", [Ids])
+        format("~n  Use: consultar(Id).~n~n")
     ).
 
 
 % -------------------------------------------------------------
 %  buscar_e_exibir(+IdOrigem)
-%  Tenta rota direta primeiro; se não houver, tenta baldeação.
+%  Tenta rota direta; se não houver, tenta com baldeação.
 % -------------------------------------------------------------
 buscar_e_exibir(IdOrigem) :-
     (
@@ -95,9 +107,12 @@ buscar_e_exibir(IdOrigem) :-
 % -------------------------------------------------------------
 exibir_direta(Linha) :-
     nome_linha(Linha, Nome),
+    info_linha(Linha, Tipo, Dias, Primeira, Ultima),
     format("~n  [DIRETA]~n"),
-    format("  Linha      : ~w~n", [Linha]),
-    format("  Descricao  : ~w~n", [Nome]),
+    format("  Linha      : ~w — ~w~n",   [Linha, Nome]),
+    format("  Tipo       : ~w~n",         [Tipo]),
+    format("  Opera      : ~w~n",         [Dias]),
+    format("  Horarios   : ~w ate ~w~n",  [Primeira, Ultima]),
     format("  Embarque   : Na parada informada~n"),
     format("  Desembarque: CI/UFPB (Campus I — Bancarios)~n").
 
@@ -108,17 +123,34 @@ exibir_direta(Linha) :-
 exibir_baldeacao(Linha1, IdBaldeacao, Linha2) :-
     nome_linha(Linha1, Nome1),
     nome_linha(Linha2, Nome2),
+    info_linha(Linha1, Tipo1, Dias1, Primeira1, Ultima1),
+    info_linha(Linha2, Tipo2, Dias2, Primeira2, Ultima2),
     parada_info(IdBaldeacao, DescBaldeacao),
+    recursos_parada(IdBaldeacao, RecursosBaldeacao),
     format("~n  [COM BALDEACAO]~n"),
     format("  1a Linha   : ~w — ~w~n",  [Linha1, Nome1]),
+    format("  Tipo       : ~w~n",        [Tipo1]),
+    format("  Opera      : ~w~n",        [Dias1]),
+    format("  Horarios   : ~w ate ~w~n", [Primeira1, Ultima1]),
     format("  Baldeacao  : ~w~n",        [DescBaldeacao]),
+    exibir_acessibilidade_baldeacao(RecursosBaldeacao),
     format("  2a Linha   : ~w — ~w~n",  [Linha2, Nome2]),
+    format("  Tipo       : ~w~n",        [Tipo2]),
+    format("  Opera      : ~w~n",        [Dias2]),
+    format("  Horarios   : ~w ate ~w~n", [Primeira2, Ultima2]),
     format("  Desembarque: CI/UFPB (Campus I — Bancarios)~n").
 
 
 % -------------------------------------------------------------
+%  exibir_acessibilidade_baldeacao(+Recursos)
+% -------------------------------------------------------------
+exibir_acessibilidade_baldeacao([]) :- !.
+exibir_acessibilidade_baldeacao(Recursos) :-
+    format("  Acessib.   : ~w~n", [Recursos]).
+
+
+% -------------------------------------------------------------
 %  listar_paradas/0
-%  Lista todas as paradas cadastradas com seus IDs.
 % -------------------------------------------------------------
 listar_paradas :-
     format("~n=== PARADAS CADASTRADAS ===~n"),
