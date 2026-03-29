@@ -2,6 +2,7 @@
 % dados_v2.pl — Base de conhecimento do GPS CI/UFPB
 % Versão 2.0 — Revisada e ampliada com base na realidade SEMOB-JP
 %
+% 
 % Modelo:
 %   parada(Id, Rua, Referencia, Bairro, Sentido).
 %   linha(Codigo, Nome).
@@ -14,18 +15,6 @@
 %   tipo_linha(CodigoLinha, Tipo).
 %   acessibilidade_parada(IdParada, TipoRecurso).
 %
-% NOTAS DE REVISÃO (v1 → v2):
-%   [CORRIGIDO]  Linha 304 renomeada: era 'Bancarios/Castelo Branco - Pedro II',
-%                agora reflete itinerário real via Dom Pedro II / Campus V
-%   [ADICIONADO] Linha 303 — Cidade Verde / Pedro II (irmã da 302, via Dom Pedro II)
-%   [ADICIONADO] Linha 518 — Bancarios / Epitacio (substituta da antiga 5310)
-%   [ADICIONADO] Linha 527 — Castelo Branco / Epitacio (criada em 2022 para UFPB)
-%   [ADICIONADO] Paradas p054..p070 cobrindo novos corredores
-%   [ADICIONADO] Fatos de horário, dias de operação, tipo e acessibilidade
-%   [ADICIONADO] linha_vai_ao_ci para 303, 518, 527
-%   [ADICIONADO] Baldeações envolvendo 518 e 527
-%   [CORRIGIDO]  Referência p013 ajustada para incluir 'Girador UFPB / Via Expressa Padre Ze'
-%   [CORRIGIDO]  Sentido de p029 ajustado; girador é ponto de retorno real
 % =============================================================
 
 
