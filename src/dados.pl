@@ -1,8 +1,4 @@
 % =============================================================
-% dados_v2.pl — Base de conhecimento do GPS CI/UFPB
-% Versão 2.0 — Revisada e ampliada com base na realidade SEMOB-JP
-%
-% 
 % Modelo:
 %   parada(Id, Rua, Referencia, Bairro, Sentido).
 %   linha(Codigo, Nome).
@@ -47,7 +43,6 @@ parada(p011, 'Rua Comerc Jose Gomes dos Santos', 'Vila dos Pescadores / Penha', 
 parada(p012, 'Av. da Falesia', 'Orla da Penha/Seixas', 'Penha', 'bairro_centro').
 
 % --- Bancários / UFPB ---
-% [CORRIGIDO v2] Referencia ampliada para incluir o Girador e a Via Expressa Padre Ze
 parada(p013, 'Rua Tab Estanislau Eloy / Via Expressa Padre Ze', 'HU/UFPB — Girador Campus I', 'Bancarios', 'bairro_centro').
 parada(p014, 'Rua Empre Joao Rodrigues Alves', 'Entorno UFPB / Bancarios', 'Bancarios', 'bairro_centro').
 
@@ -78,7 +73,6 @@ parada(p025, 'Av. Gov Antonio da Silva Mariz', 'Acesso Altiplano/Cabo Branco', '
 parada(p026, 'Av. Joao Cirilo da Silva', 'Corredor do Altiplano', 'Altiplano', 'bairro_centro').
 parada(p027, 'Terminal Altiplano', 'Terminal Altiplano', 'Altiplano', 'bairro_centro').
 parada(p028, 'Av. Mons Odilon Coutinho', 'Corredor do Altiplano', 'Altiplano', 'bairro_centro').
-% [CORRIGIDO v2] Girador é ponto de retorno/controle da linha 520
 parada(p029, 'Girador Estacao Ciencias', 'Estacao Ciencias — ponto de retorno linha 520', 'Altiplano', 'circular').
 parada(p030, 'Av. Panoramica/PB-008', 'Trecho panoramico Altiplano', 'Altiplano', 'bairro_centro').
 
@@ -118,10 +112,6 @@ parada(p050, 'Rua Jose de Carvalho Costa Filho', 'Acesso Colinas II', 'Colinas d
 parada(p051, 'Av. Valdemar Galdino Naziazeno', 'Corredor Geisel/Colinas', 'Geisel', 'bairro_centro').
 parada(p052, 'Rua Diogenes Chianca', 'Corredor Mangabeira/Geisel', 'Mangabeira', 'bairro_centro').
 parada(p053, 'Rua Jose Firmino Ferreira', 'Trecho Bancarios', 'Bancarios', 'bairro_centro').
-
-% =============================================================
-% PARADAS ADICIONADAS NA v2
-% =============================================================
 
 % --- Castelo Branco (corredor Dom Pedro II — linhas 303, 304, 527) ---
 parada(p054, 'Av. Dom Pedro II', 'Proximo ao viaduto / Castelo Branco Norte', 'Castelo Branco', 'bairro_centro').
@@ -173,22 +163,18 @@ parada(p070, 'Av. Santa Catarina', 'Corredor Cristo Redentor', 'Cristo', 'bairro
 linha('101', 'Grotao / Colinas do Sul').
 linha('203', 'Mangabeira / Rangel').
 linha('207', 'Penha').
-% [ADICIONADO v2] Linha 303 — Cidade Verde/Pedro II (confirmada pela SEMOB)
 linha('303', 'Cidade Verde / Pedro II').
-% [CORRIGIDO v2] Nome alinhado ao itinerario real: passa pelo Campus V via Dom Pedro II
 linha('301', 'Mangabeira Pedro II - Direto').
 linha('302', 'Cidade Verde').
 linha('304', 'Bancarios / Castelo Branco - Pedro II').
 linha('402', 'Torre').
 linha('508', 'Cabo Branco / Penha').
 linha('510', 'Tambau via Tamandare').
-% [ADICIONADO v2] Linha 518 — Bancarios/Epitacio (substituta da 5310, confirmada SEMOB)
 linha('518', 'Bancarios / Epitacio').
 linha('517', 'Mangabeira Cidade Verde Epitacio').
 linha('520', 'Altiplano / Epitacio').
 linha('521', 'Manaira / Bessa').
 linha('523', 'Colinas do Sul / Epitacio').
-% [ADICIONADO v2] Linha 527 — Castelo Branco/Epitacio (criada em 2022, foco UFPB)
 linha('527', 'Castelo Branco / Epitacio').
 
 
@@ -254,9 +240,6 @@ passa_por('302', p016).
 passa_por('302', p017).
 passa_por('302', p006).
 passa_por('302', p007).
-
-% --- 303 — Cidade Verde / Pedro II [ADICIONADO v2] ---
-% Trajeto: Terminal Patricia Tomaz → Cidade Verde → Bancarios → Pedro II → Lagoa → TIV
 passa_por('303', p031).
 passa_por('303', p033).
 passa_por('303', p034).
@@ -268,8 +251,6 @@ passa_por('303', p055).
 passa_por('303', p056).
 passa_por('303', p006).
 passa_por('303', p007).
-
-% --- 304 — Bancarios / Castelo Branco - Pedro II ---
 passa_por('304', p001).
 passa_por('304', p002).
 passa_por('304', p014).
@@ -353,7 +334,7 @@ passa_por('520', p025).
 passa_por('520', p026).
 passa_por('520', p027).
 passa_por('520', p028).
-passa_por('520', p029).
+% --- passa_por('520', p029) ---  
 passa_por('520', p030).
 
 % --- 521 — Manaira / Bessa ---
@@ -381,8 +362,7 @@ passa_por('523', p019).
 passa_por('523', p018).
 passa_por('523', p006).
 
-% --- 527 — Castelo Branco / Epitacio [ADICIONADO v2] ---
-% 12 viagens diárias (seg–sex, 6h–18h40). Girador UFPB → Castelo Branco → Epitacio → TIV
+% --- 527 — Castelo Branco / Epitacio ---
 passa_por('527', p059).
 passa_por('527', p013).
 passa_por('527', p014).
@@ -402,12 +382,12 @@ passa_por('527', p007).
 
 linha_vai_ao_ci('301').
 linha_vai_ao_ci('302').
-linha_vai_ao_ci('303').  % [ADICIONADO v2]
+linha_vai_ao_ci('303').  
 linha_vai_ao_ci('304').
 linha_vai_ao_ci('517').
-linha_vai_ao_ci('518').  % [ADICIONADO v2]
+linha_vai_ao_ci('518').  
 linha_vai_ao_ci('523').
-linha_vai_ao_ci('527').  % [ADICIONADO v2]
+linha_vai_ao_ci('527').  
 
 
 % =============================================================
@@ -418,25 +398,25 @@ linha_vai_ao_ci('527').  % [ADICIONADO v2]
 % --- Terminal do Varadouro (TIV) — p007 ---
 ponto_de_baldeacao(p007, '101', '301').
 ponto_de_baldeacao(p007, '101', '302').
-ponto_de_baldeacao(p007, '101', '303').   % [ADICIONADO v2]
+ponto_de_baldeacao(p007, '101', '303').   
 ponto_de_baldeacao(p007, '101', '304').
 ponto_de_baldeacao(p007, '402', '301').
 ponto_de_baldeacao(p007, '402', '302').
-ponto_de_baldeacao(p007, '402', '303').   % [ADICIONADO v2]
+ponto_de_baldeacao(p007, '402', '303').   
 ponto_de_baldeacao(p007, '402', '304').
 ponto_de_baldeacao(p007, '510', '301').
 ponto_de_baldeacao(p007, '510', '302').
-ponto_de_baldeacao(p007, '510', '303').   % [ADICIONADO v2]
+ponto_de_baldeacao(p007, '510', '303').   
 ponto_de_baldeacao(p007, '510', '304').
 ponto_de_baldeacao(p007, '508', '301').
 ponto_de_baldeacao(p007, '508', '302').
-ponto_de_baldeacao(p007, '508', '303').   % [ADICIONADO v2]
+ponto_de_baldeacao(p007, '508', '303').   
 ponto_de_baldeacao(p007, '508', '304').
-ponto_de_baldeacao(p007, '518', '301').   % [ADICIONADO v2]
-ponto_de_baldeacao(p007, '518', '302').   % [ADICIONADO v2]
-ponto_de_baldeacao(p007, '527', '101').   % [ADICIONADO v2]
-ponto_de_baldeacao(p007, '527', '402').   % [ADICIONADO v2]
-ponto_de_baldeacao(p007, '527', '510').   % [ADICIONADO v2]
+ponto_de_baldeacao(p007, '518', '301').   
+ponto_de_baldeacao(p007, '518', '302').   
+ponto_de_baldeacao(p007, '527', '101').   
+ponto_de_baldeacao(p007, '527', '402').   
+ponto_de_baldeacao(p007, '527', '510').   
 
 % --- Epitacio / Praca da Independencia — p018 ---
 ponto_de_baldeacao(p018, '510', '517').
@@ -445,20 +425,20 @@ ponto_de_baldeacao(p018, '521', '517').
 ponto_de_baldeacao(p018, '521', '523').
 ponto_de_baldeacao(p018, '508', '517').
 ponto_de_baldeacao(p018, '508', '523').
-ponto_de_baldeacao(p018, '510', '518').   % [ADICIONADO v2]
-ponto_de_baldeacao(p018, '521', '518').   % [ADICIONADO v2]
-ponto_de_baldeacao(p018, '510', '527').   % [ADICIONADO v2]
-ponto_de_baldeacao(p018, '521', '527').   % [ADICIONADO v2]
+ponto_de_baldeacao(p018, '510', '518').   
+ponto_de_baldeacao(p018, '521', '518').   
+ponto_de_baldeacao(p018, '510', '527').   
+ponto_de_baldeacao(p018, '521', '527').   
 
 % --- HU / Girador UFPB — p013 ---
 ponto_de_baldeacao(p013, '517', '301').
 ponto_de_baldeacao(p013, '517', '302').
-ponto_de_baldeacao(p013, '517', '303').   % [ADICIONADO v2]
+ponto_de_baldeacao(p013, '517', '303').  
 ponto_de_baldeacao(p013, '523', '301').
 ponto_de_baldeacao(p013, '523', '302').
-ponto_de_baldeacao(p013, '523', '303').   % [ADICIONADO v2]
-ponto_de_baldeacao(p013, '518', '527').   % [ADICIONADO v2]
-ponto_de_baldeacao(p013, '527', '518').   % [ADICIONADO v2]
+ponto_de_baldeacao(p013, '523', '303').   
+ponto_de_baldeacao(p013, '518', '527').   
+ponto_de_baldeacao(p013, '527', '518').  
 
 % --- Shopping Mangabeira / Av. Hilton Souto Maior — p002 ---
 ponto_de_baldeacao(p002, '203', '520').
@@ -466,16 +446,41 @@ ponto_de_baldeacao(p002, '203', '508').
 ponto_de_baldeacao(p002, '207', '520').
 ponto_de_baldeacao(p002, '207', '508').
 ponto_de_baldeacao(p002, '302', '520').
-ponto_de_baldeacao(p002, '304', '520').   % [ADICIONADO v2]
+ponto_de_baldeacao(p002, '304', '520').  
+
+% --- Mangabeira interior (p004) — linha 203 -> baldeacao p006 -> linhas diretas ao CI ---
+ponto_de_baldeacao(p006, '203', '301').   
+ponto_de_baldeacao(p006, '203', '302').   
+ponto_de_baldeacao(p006, '203', '303').   
+ponto_de_baldeacao(p006, '203', '304').  
+ponto_de_baldeacao(p006, '203', '517').
+ponto_de_baldeacao(p006, '203', '518').   
+ponto_de_baldeacao(p006, '203', '523').   
+ponto_de_baldeacao(p006, '203', '527').  
+% --- Penha interior (p011) — linha 207 -> baldeacao p006 -> linhas diretas ao CI ---
+ponto_de_baldeacao(p006, '207', '301').   
+ponto_de_baldeacao(p006, '207', '302').  
+ponto_de_baldeacao(p006, '207', '303').  
+ponto_de_baldeacao(p006, '207', '304').  
+ponto_de_baldeacao(p006, '207', '517').   
+ponto_de_baldeacao(p006, '207', '518').   
+ponto_de_baldeacao(p006, '207', '523').  
+ponto_de_baldeacao(p006, '207', '527').  
+% --- Altiplano (p027, p030) — linha 520 -> baldeacao p002 -> linhas ao CI ---
+ponto_de_baldeacao(p002, '520', '301').  
+ponto_de_baldeacao(p002, '520', '302').   
+ponto_de_baldeacao(p002, '520', '303').   
+ponto_de_baldeacao(p002, '520', '304').  
+ponto_de_baldeacao(p002, '520', '517').   
 
 % --- Lagoa / Parque Solon de Lucena — p006 ---
 % Ponto de baldeacao central entre linhas que passam pela Lagoa
-ponto_de_baldeacao(p006, '101', '510').   % [ADICIONADO v2]
-ponto_de_baldeacao(p006, '101', '402').   % [ADICIONADO v2]
-ponto_de_baldeacao(p006, '402', '510').   % [ADICIONADO v2]
-ponto_de_baldeacao(p006, '518', '101').   % [ADICIONADO v2]
-ponto_de_baldeacao(p006, '527', '101').   % [ADICIONADO v2]
-ponto_de_baldeacao(p006, '523', '510').   % [ADICIONADO v2]
+ponto_de_baldeacao(p006, '101', '510').   
+ponto_de_baldeacao(p006, '101', '402').   
+ponto_de_baldeacao(p006, '402', '510').   
+ponto_de_baldeacao(p006, '518', '101').  
+ponto_de_baldeacao(p006, '527', '101').  
+ponto_de_baldeacao(p006, '523', '510').   
 
 
 % =============================================================
@@ -516,7 +521,6 @@ horario_primeira_viagem('521', bairro_centro, '05:30').
 horario_ultima_viagem('521',   bairro_centro, '22:00').
 horario_primeira_viagem('523', bairro_centro, '05:00').
 horario_ultima_viagem('523',   bairro_centro, '22:50').  % ampliado por demanda UFPB
-% [ADICIONADO v2] Linha 527: seg-sex apenas, 12 viagens diárias (6h–18h40)
 horario_primeira_viagem('527', bairro_centro, '06:00').
 horario_ultima_viagem('527',   bairro_centro, '18:40').
 
@@ -538,12 +542,10 @@ opera_nos_dias('402',  diario).
 opera_nos_dias('508',  diario).
 opera_nos_dias('510',  diario).
 opera_nos_dias('517',  diario).
-% [ADICIONADO v2] 518 opera nos dias úteis; confirmar sábado na SEMOB
 opera_nos_dias('518',  uteis).
 opera_nos_dias('520',  uteis).
 opera_nos_dias('521',  diario).
 opera_nos_dias('523',  uteis).
-% [ADICIONADO v2] 527 exclusivamente dias úteis (conforme portaria SEMOB 2022)
 opera_nos_dias('527',  uteis).
 
 
@@ -564,11 +566,11 @@ tipo_linha('402', convencional).
 tipo_linha('508', convencional).
 tipo_linha('510', convencional).
 tipo_linha('517', convencional).
-tipo_linha('518', universitario).  % [ADICIONADO v2] foco Bancarios/UFPB–Epitacio
+tipo_linha('518', universitario).
 tipo_linha('520', convencional).
 tipo_linha('521', convencional).
 tipo_linha('523', convencional).
-tipo_linha('527', universitario).  % [ADICIONADO v2] criada especificamente para UFPB
+tipo_linha('527', universitario).  
 
 
 % =============================================================

@@ -1,10 +1,4 @@
-% =============================================================
-%  interface.pl — Interface amigável do GPS CI/UFPB
-%  Versão 2.1 — Exibe horários, dias, tipo e acessibilidade
-% =============================================================
-
 :- consult(regras).
-
 
 % -------------------------------------------------------------
 %  consultar(+IdParada)

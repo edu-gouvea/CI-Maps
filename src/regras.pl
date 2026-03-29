@@ -85,22 +85,40 @@ rota_direta(IdOrigem, Linha) :-
 
 % -------------------------------------------------------------
 %  rota_com_baldeacao(+IdParadaOrigem, -Linha1, -IdBaldeacao, -Linha2)
+%
+%  Verifica se existe uma baldeacao valida cadastrada para a origem.
+%  Linha2 pode ou nao ir ao CI — a verificacao de destino fica a cargo
+%  de existe_rota/1. Isso permite consultas como 203->520 via p002
+%  (baldeacao valida mesmo que a 520 nao va ao CI diretamente).
+%
+%  Clausula 1: Linha1 nao vai ao CI (caso classico).
+%  Clausula 2: Linha1 vai ao CI mas o passageiro troca de linha
+%              no ponto de baldeacao (ex.: 517 via p013 -> 301).
 % -------------------------------------------------------------
 rota_com_baldeacao(IdOrigem, Linha1, IdBaldeacao, Linha2) :-
     passa_por(Linha1, IdOrigem),
     \+ linha_vai_ao_ci(Linha1),
     ponto_de_baldeacao(IdBaldeacao, Linha1, Linha2),
+    passa_por(Linha1, IdBaldeacao).
+
+rota_com_baldeacao(IdOrigem, Linha1, IdBaldeacao, Linha2) :-
+    passa_por(Linha1, IdOrigem),
+    linha_vai_ao_ci(Linha1),
+    Linha1 \= Linha2,
+    ponto_de_baldeacao(IdBaldeacao, Linha1, Linha2),
     passa_por(Linha1, IdBaldeacao),
-    linha_vai_ao_ci(Linha2).
+    IdOrigem \= IdBaldeacao.
 
 
 % -------------------------------------------------------------
 %  existe_rota(+IdParadaOrigem)
+%  Verdadeiro se existe rota direta ou via baldeacao que leve ao CI.
 % -------------------------------------------------------------
 existe_rota(IdOrigem) :-
     rota_direta(IdOrigem, _), !.
 existe_rota(IdOrigem) :-
-    rota_com_baldeacao(IdOrigem, _, _, _).
+    rota_com_baldeacao(IdOrigem, _, _, Linha2),
+    linha_vai_ao_ci(Linha2).
 
 
 % -------------------------------------------------------------
